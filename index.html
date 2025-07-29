@@ -2,9 +2,10 @@
 <html lang="vi">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Scroll View</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tài Liệu Mật</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
     <style>
         * {
             box-sizing: border-box;
@@ -21,159 +22,250 @@
 
         .video-container {
             position: relative;
-            width: 100%;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             background: #000;
+            border-radius: 8px;
             overflow: hidden;
         }
 
+        .image-container {
+            position: relative;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        video:fullscreen {
+            object-fit: contain;
+            background: #000;
+        }
+
         video {
+            width: 100%;
             height: 100%;
-            width: auto;
-            object-fit: cover;
-            cursor: pointer;
+            display: block;
+            object-fit: contain;
         }
 
-        @media (min-width: 769px) {
-            .video-container {
-                justify-content: center;
-                background: #111;
-            }
-
-            video {
-                height: 100%;
-                width: auto;
-                /* Giữ tỉ lệ gốc */
-                aspect-ratio: 9 / 16;
-                border-radius: 0;
-                /* Video đứng sát */
-            }
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #111;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1000;
         }
 
+        nav select,
+        nav button {
+            background: #222;
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            font-size: 1rem;
+            border-radius: 6px;
+        }
 
+        .content {
+            margin-top: 60px;
+            padding: 20px;
+        }
 
         .duration {
             position: absolute;
-            bottom: 15px;
-            right: 15px;
+            bottom: 8px;
+            right: 8px;
             background: rgba(0, 0, 0, 0.6);
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 0.9rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: white;
+            pointer-events: none;
         }
 
-        .volume-control {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 8px 12px;
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .video-container,
+        .image-container {
+            position: relative;
+            background: #000;
             border-radius: 8px;
-            z-index: 100;
+            overflow: hidden;
+        }
+
+        video,
+        img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+        }
+
+        .duration {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        #loginScreen {
+            position: fixed;
+            inset: 0;
+            background: #111;
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            z-index: 2000;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        #loginScreen input {
+            padding: 10px;
+            font-size: 1rem;
+            width: 250px;
+            border-radius: 5px;
+            border: none;
+        }
+
+        #loginScreen button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            background: #0a84ff;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+
+        #loginError {
+            color: #ff4444;
             font-size: 0.9rem;
-        }
-
-        .volume-control input {
-            width: 80px;
-        }
-
-        @media (max-width: 768px) {
-            .volume-control {
-                top: 5px;
-                right: 5px;
-                padding: 5px 8px;
-            }
-
-            .volume-control input {
-                width: 60px;
-            }
-
-            .duration {
-                font-size: 0.8rem;
-                padding: 3px 7px;
-            }
+            height: 1rem;
         }
     </style>
 </head>
 
 <body>
-    <div class="volume-control">
-        Âm lượng: <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.5">
+    <div id="loginScreen">
+        <h2>Đăng nhập</h2>
+        <input type="text" id="username" placeholder="Tên đăng nhập" autocomplete="off" />
+        <input type="password" id="password" placeholder="Mật khẩu" autocomplete="off" />
+        <div id="loginError"></div>
+        <button id="loginBtn">Đăng nhập</button>
     </div>
 
-    <div id="videoList"></div>
+    <nav style="display:none;">
+        <div>
+            <select id="folderSelect"></select>
+            <select id="mediaTypeSelect">
+                <option value="videos">Video</option>
+                <option value="images">Ảnh</option>
+            </select>
+            <button onclick="loadMedia()">Tải</button>
+        </div>
+        <button onclick="emergencyWipe()" style="background:red;">XÓA KHẨN CẤP(ESC)</button>
+    </nav>
+
+
+    <div class="content">
+        <div class="media-grid" id="mediaGrid"></div>
+    </div>
 
     <script>
-        const videoList = document.getElementById('videoList');
-        let currentPlaying = null;
+        const VALID_USER = 'ken';
+        const VALID_PASS = 'kenzema';
 
-        async function loadMedia() {
-            const response = await fetch('media.json');
-            const data = await response.json();
-            data.videos.forEach(videoData => {
-                const container = document.createElement('div');
-                container.className = 'video-container';
+        const loginScreen = document.getElementById('loginScreen');
+        const loginBtn = document.getElementById('loginBtn');
+        const loginError = document.getElementById('loginError');
+        const nav = document.querySelector('nav');
 
-                const video = document.createElement('video');
-                video.src = videoData.file;
-                video.setAttribute('preload', 'metadata');
-                video.setAttribute('playsinline', '');
-                video.setAttribute('muted', 'true');
+        let mediaData = {};
 
-                video.addEventListener('click', () => {
-                    video.paused ? video.play() : video.pause();
-                });
+        loginBtn.addEventListener('click', async () => {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
 
-                const durationLabel = document.createElement('div');
-                durationLabel.className = 'duration';
-                durationLabel.textContent = videoData.duration;
+            if (username === VALID_USER && password === VALID_PASS) {
+                loginScreen.style.display = 'none';
+                nav.style.display = 'flex';
 
-                container.appendChild(video);
-                container.appendChild(durationLabel);
-                videoList.appendChild(container);
-            });
+                try {
+                    const res = await fetch("media.json");
+                    mediaData = await res.json();
 
-            setupIntersectionObserver();
-        }
+                    const folderSelect = document.getElementById("folderSelect");
+                    folderSelect.innerHTML = Object.keys(mediaData)
+                        .map(folder => `<option value="${folder}">${folder}</option>`)
+                        .join("");
 
-        function setupIntersectionObserver() {
-            const options = { root: null, threshold: 0.6 };
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    const video = entry.target.querySelector('video');
-                    if (entry.isIntersecting) {
-                        if (currentPlaying && currentPlaying !== video) {
-                            currentPlaying.pause();
-                            currentPlaying.currentTime = 0;
-                        }
-                        currentPlaying = video;
-                        video.play();
-                    } else {
-                        video.pause();
-                        video.currentTime = 0;
-                    }
-                });
-            }, options);
+                    loadMedia();
+                } catch (err) {
+                    alert("Không thể tải media.json");
+                }
 
-            document.querySelectorAll('.video-container').forEach(container => observer.observe(container));
-        }
-
-        // Volume control
-        document.getElementById('volumeSlider').addEventListener('input', function () {
-            document.querySelectorAll('video').forEach(v => v.volume = this.value);
+            } else {
+                loginError.textContent = 'Sai tên đăng nhập hoặc mật khẩu!';
+            }
         });
 
-        loadMedia();
+        function loadMedia() {
+            const folder = document.getElementById("folderSelect").value;
+            const type = document.getElementById("mediaTypeSelect").value;
+            const grid = document.getElementById("mediaGrid");
+            grid.innerHTML = "";
+
+            if (!mediaData[folder] || !mediaData[folder][type]) return;
+
+            mediaData[folder][type].forEach(item => {
+                const container = document.createElement("div");
+                container.className = type === "videos" ? "video-container" : "image-container";
+
+                if (type === "videos") {
+                    const video = document.createElement("video");
+                    video.src = item.path;
+                    video.controls = true;
+                    video.volume = 0.5;
+                    container.appendChild(video);
+
+                    const dur = document.createElement("div");
+
+                } else if (type === "images") {
+                    const img = document.createElement("img");
+                    img.src = item.path;
+                    container.appendChild(img);
+                }
+
+                grid.appendChild(container);
+            });
+        }
+        function emergencyWipe() {
+            const grid = document.getElementById("mediaGrid");
+            grid.innerHTML = "";  // Xóa sạch nội dung
+
+            // Có thể thay bằng ẩn toàn bộ nếu muốn:
+            // grid.style.display = "none";
+
+            console.log("[+] Đã xoá khẩn cấp media hiển thị!");
+        }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "Escape") {
+                emergencyWipe();
+            }
+        });
+
     </script>
 </body>
 
-
-</html>
-=======
 </html>
