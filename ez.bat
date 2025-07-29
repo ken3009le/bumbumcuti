@@ -7,8 +7,12 @@ set BRANCH=main
 
 REM === Cấu hình git username/email nếu chưa có ===
 git config --global user.name "ken3009le"
-git config --global user.email "kenzema@spyronx.org"
+git config --global user.email "ken3009le@gmail.com"
+git commit --amend --reset-author -m "🔥 Force push full project with large files - Kenzema"
+git push --force
 
+REM === Kiểm tra xem đã cài Git chưa ===
+where git >nul 2>&1
 REM === Init Git repo nếu chưa tồn tại ===
 IF NOT EXIST ".git" (
     echo [+] Initializing Git repo...
