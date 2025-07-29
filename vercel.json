@@ -1,9 +1,6 @@
 {
-  "rewrites": [
-    { "source": "/", "destination": "/index.html" }
-  ],
-  "cleanUrls": true,
-  "redirects": [],
-  "headers": [],
-  "trailingSlash": false
+  "projects": {},
+  "builds": [],
+  "routes": [],
+  "outputDirectory": "public"
 }
