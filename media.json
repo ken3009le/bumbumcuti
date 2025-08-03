@@ -1,7 +1,31 @@
 {
   ".git": {
-    "images": [],
-    "videos": []
+    "images": [
+      {
+        "path": "ImagesA/5.jpg",
+        "size": 87333
+      },
+      {
+        "path": "ImagesA/6.jpg",
+        "size": 69036
+      },
+      {
+        "path": "ImagesA/7.jpg",
+        "size": 62502
+      },
+      {
+        "path": "ImagesA/8.jpg",
+        "size": 47746
+      },
+      {
+        "path": "ImagesA/9.jpg",
+        "size": 32405
+      },
+      {
+        "path": "ImagesA/10.jpg",
+        "size": 80880
+      }
+    ]
   },
   "baonghi": {
     "images": [

@@ -3,87 +3,103 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Tài Liệu Mật</title>
-    <link rel="icon" href="icon.ico" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Archive69</title>
+    <link rel="icon" href="e-A69.ico" type="image/x-icon" />
     <style>
+        :root {
+            --bg: #000;
+            --text: #fff;
+            --accent: #ff9000;
+            --nav: #1a1a1a;
+            --button-bg: #2a2a2a;
+            --card-bg: #111;
+            --border: rgba(255, 255, 255, 0.1);
+            --highlight: #ff9000;
+        }
+
+        body.light {
+            --bg: #fceee3;
+            /* màu da nhẹ */
+            --text: #3a2c2c;
+            /* nâu đỏ trầm */
+            --accent: #ff8ab1;
+            /* hồng hoa đào */
+            --nav: #f7dad7;
+            /* hồng nhạt */
+            --button-bg: #f8dfda;
+            /* nền nhạt cho nút */
+            --card-bg: #fff8f5;
+            /* nền cho media cards */
+            --border: #e5c4c2;
+            /* viền nhẹ hồng tro */
+            --highlight: #ff8ab1;
+            /* giữ điểm nhấn hồng đào */
+        }
+
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
 
+        body.light .video-container,
+        body.light .image-container {
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 12px rgba(255, 174, 200, 0.2);
+        }
+
+        body.light nav {
+            box-shadow: 0 2px 6px rgba(255, 180, 190, 0.3);
+        }
+
         body {
-            background: #000;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            overflow-x: hidden;
-        }
-
-        .video-container {
-            position: relative;
-            background: #000;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .image-container {
-            position: relative;
-            background: #000;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        video:fullscreen {
-            object-fit: contain;
-            background: #000;
-        }
-
-        video {
-            width: 100%;
-            height: 100%;
-            display: block;
-            object-fit: contain;
+            background: var(--bg);
+            color: var(--text);
+            transition: background 0.3s, color 0.3s;
+            font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+            font-weight: 400;
         }
 
         nav {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            background: #111;
-            padding: 10px 20px;
+            right: 0;
+            background: var(--nav);
+            padding: 12px 30px;
             display: flex;
-            align-items: center;
             justify-content: space-between;
             z-index: 1000;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
         }
 
         nav select,
         nav button {
-            background: #222;
-            color: #fff;
+            background: var(--button-bg);
+            color: var(--text);
             border: none;
-            padding: 6px 12px;
+            padding: 8px 16px;
+            border-radius: 4px;
             font-size: 1rem;
-            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        nav button:hover {
+            background: var(--accent);
+            color: #fff;
+            cursor: pointer;
+        }
+
+        #wipeLogo:hover {
+            transform: scale(1.1) rotate(-2deg);
         }
 
         .content {
-            margin-top: 60px;
+            margin-top: 70px;
             padding: 20px;
-        }
-
-        .duration {
-            position: absolute;
-            bottom: 8px;
-            right: 8px;
-            background: rgba(0, 0, 0, 0.6);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            color: white;
-            pointer-events: none;
         }
 
         .media-grid {
@@ -94,10 +110,18 @@
 
         .video-container,
         .image-container {
-            position: relative;
-            background: #000;
+            background: var(--card-bg);
+            border: 2px solid var(--border);
             border-radius: 8px;
             overflow: hidden;
+            position: relative;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .video-container:hover,
+        .image-container:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 15px var(--highlight);
         }
 
         video,
@@ -105,53 +129,151 @@
             width: 100%;
             height: auto;
             display: block;
-            object-fit: cover;
+        }
+
+        #imagePopup {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(15px);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #popupImg {
+            border: 5px solid var(--accent);
+            border-radius: 10px;
+            max-width: 90vw;
+            max-height: 90vh;
+            animation: zoomIn 0.2s ease;
         }
 
         .duration {
             position: absolute;
-            bottom: 10px;
+            bottom: 8px;
             right: 10px;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.7);
             padding: 4px 8px;
             border-radius: 4px;
-            font-size: 0.85rem;
+            color: white;
+            font-size: 0.8rem;
         }
 
         #loginScreen {
             position: fixed;
             inset: 0;
-            background: #111;
+            background: var(--bg);
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 2000;
             flex-direction: column;
             gap: 15px;
+            z-index: 2000;
+        }
+
+        #loginScreen h2 {
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        #loginScreen input,
+        #loginScreen button {
+            padding: 12px;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: none;
+            width: 260px;
         }
 
         #loginScreen input {
-            padding: 10px;
-            font-size: 1rem;
-            width: 250px;
-            border-radius: 5px;
-            border: none;
+            background: var(--button-bg);
+            color: var(--text);
         }
 
         #loginScreen button {
-            padding: 10px 20px;
-            font-size: 1rem;
-            background: #0a84ff;
-            border: none;
-            border-radius: 5px;
-            color: white;
+            background: var(--accent);
+            color: #fff;
             cursor: pointer;
+        }
+
+        #loginScreen button:hover {
+            opacity: 0.85;
         }
 
         #loginError {
             color: #ff4444;
             font-size: 0.9rem;
-            height: 1rem;
+            height: 1.2rem;
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .fade-in-left {
+            animation: fadeLeft 0.3s ease;
+        }
+
+        .fade-in-right {
+            animation: fadeRight 0.3s ease;
+        }
+
+        @keyframes fadeLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        ::selection {
+            background: var(--accent);
+            color: black;
+        }
+
+        button#themeToggle {
+            background: var(--accent);
+            color: #000;
+            font-weight: bold;
+        }
+
+        button#themeToggle:hover {
+            filter: brightness(1.1);
+        }
+
+        button[onclick="emergencyWipe()"] {
+            background: #ff4444 !important;
+            font-weight: bold;
+        }
+
+        button[onclick="emergencyWipe()"]:hover {
+            background: #ff2222 !important;
         }
     </style>
 </head>
@@ -173,51 +295,61 @@
                 <option value="images">Ảnh</option>
             </select>
             <button onclick="loadMedia()">Tải</button>
+            <button id="themeToggle" title="Chuyển sáng/tối">🌓</button>
         </div>
-        <button onclick="emergencyWipe()" style="background:red;">XÓA KHẨN CẤP(ESC)</button>
-    </nav>
 
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <img id="wipeLogo" src="Archive-69.png" alt="Wipe" title="Bấm để xoá khẩn cấp (ESC)"
+                style="height: 40px; cursor: pointer; transition: transform 0.2s;">
+            <div id="realtimeClock" style="font-weight: bold; font-size: 1rem; color: var(--accent);"></div>
+        </div>
+
+
+    </nav>
 
     <div class="content">
         <div class="media-grid" id="mediaGrid"></div>
     </div>
 
-    <script>
-        const VALID_USER = 'ken';
-        const VALID_PASS = 'kenzema';
+    <div id="imagePopup">
+        <img id="popupImg" src=""
+            style="max-width:90vw;max-height:90vh;height:auto;width:auto;object-fit:contain;border:4px solid #ff69b4;border-radius:10px;box-shadow:0 0 20px #ff69b4" />
+    </div>
 
+    <script>
+        const VALID_USER = 'ken', VALID_PASS = 'kenzema';
         const loginScreen = document.getElementById('loginScreen');
+        const nav = document.querySelector('nav');
         const loginBtn = document.getElementById('loginBtn');
         const loginError = document.getElementById('loginError');
-        const nav = document.querySelector('nav');
-
         let mediaData = {};
 
-        loginBtn.addEventListener('click', async () => {
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value.trim();
-
-            if (username === VALID_USER && password === VALID_PASS) {
+        loginBtn.onclick = async () => {
+            const u = document.getElementById('username').value.trim();
+            const p = document.getElementById('password').value.trim();
+            if (u === VALID_USER && p === VALID_PASS) {
                 loginScreen.style.display = 'none';
                 nav.style.display = 'flex';
-
                 try {
-                    const res = await fetch("media.json");
+                    const res = await fetch("media2.json");
                     mediaData = await res.json();
-
                     const folderSelect = document.getElementById("folderSelect");
-                    folderSelect.innerHTML = Object.keys(mediaData)
-                        .map(folder => `<option value="${folder}">${folder}</option>`)
-                        .join("");
-
+                    folderSelect.innerHTML = Object.keys(mediaData).map(f => `<option value="${f}">${f}</option>`).join("");
                     loadMedia();
-                } catch (err) {
-                    alert("Không thể tải media.json");
+                } catch {
+                    alert("Không thể tải media2.json");
                 }
-
             } else {
                 loginError.textContent = 'Sai tên đăng nhập hoặc mật khẩu!';
             }
+        };
+
+        document.getElementById('username').addEventListener('keydown', e => {
+            if (e.key === 'Enter') document.getElementById('password').focus();
+        });
+
+        document.getElementById('password').addEventListener('keydown', e => {
+            if (e.key === 'Enter') loginBtn.click();
         });
 
         function loadMedia() {
@@ -225,45 +357,148 @@
             const type = document.getElementById("mediaTypeSelect").value;
             const grid = document.getElementById("mediaGrid");
             grid.innerHTML = "";
-
             if (!mediaData[folder] || !mediaData[folder][type]) return;
-
             mediaData[folder][type].forEach(item => {
                 const container = document.createElement("div");
                 container.className = type === "videos" ? "video-container" : "image-container";
-
                 if (type === "videos") {
                     const video = document.createElement("video");
                     video.src = item.path;
                     video.controls = true;
                     video.volume = 0.5;
                     container.appendChild(video);
-
-                    const dur = document.createElement("div");
-
-                } else if (type === "images") {
+                } else {
                     const img = document.createElement("img");
                     img.src = item.path;
                     container.appendChild(img);
                 }
-
                 grid.appendChild(container);
             });
         }
+
         function emergencyWipe() {
-            const grid = document.getElementById("mediaGrid");
-            grid.innerHTML = "";  // Xóa sạch nội dung
-
-            // Có thể thay bằng ẩn toàn bộ nếu muốn:
-            // grid.style.display = "none";
-
+            document.getElementById("mediaGrid").innerHTML = "";
             console.log("[+] Đã xoá khẩn cấp media hiển thị!");
         }
-        document.addEventListener('keydown', (e) => {
-            if (e.key === "Escape") {
-                emergencyWipe();
+
+        document.addEventListener('keydown', e => {
+            if (e.key === "Escape") emergencyWipe();
+        });
+
+        const themeToggle = document.getElementById("themeToggle");
+        themeToggle.onclick = () => {
+            document.body.classList.toggle("light");
+            localStorage.setItem("theme", document.body.classList.contains("light") ? "light" : "dark");
+        };
+
+        window.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("wipeLogo").addEventListener("click", emergencyWipe);
+
+            if (localStorage.getItem("theme") === "light") document.body.classList.add("light");
+        });
+
+        let isFakeMode = false, originalContent;
+
+        document.addEventListener("keydown", e => {
+            if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "e") {
+                if (!isFakeMode) {
+                    originalContent = document.body.innerHTML;
+                    document.body.innerHTML = `<iframe src="elearning/index.html" style="width:100vw;height:100vh;border:none;"></iframe>`;
+                    document.title = "E-Learning - Khoa Học Máy Tính";
+                    isFakeMode = true;
+                }
+            }
+            if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "x") {
+                if (isFakeMode) {
+                    document.body.innerHTML = originalContent;
+                    document.title = "Archive69";
+                    document.querySelector("link[rel~='icon']").href = "e-A69.ico";
+                    document.getElementById("wipeLogo").src = "Archive-69.png";
+                    isFakeMode = false;
+                    location.reload();
+                }
+            }
+            if (e.key.toLowerCase() === "e") {
+                document.querySelector("button[onclick='loadMedia()']")?.click();
             }
         });
+
+        let currentIndex = -1, imageElements = [];
+
+        function updateImagePopup(index, direction = 0) {
+            if (index >= 0 && index < imageElements.length) {
+                const popupImg = document.getElementById("popupImg");
+                popupImg.classList.remove("fade-in-left", "fade-in-right");
+                void popupImg.offsetWidth;
+                popupImg.classList.add(direction === -1 ? "fade-in-left" : "fade-in-right");
+                popupImg.src = imageElements[index].src;
+                currentIndex = index;
+            }
+        }
+
+        document.addEventListener("click", function (e) {
+            if (e.target.tagName === "IMG" && e.target.closest(".image-container")) {
+                imageElements = Array.from(document.querySelectorAll(".image-container img"));
+                currentIndex = imageElements.findIndex(img => img === e.target);
+                const popup = document.getElementById("imagePopup");
+                const popupImg = document.getElementById("popupImg");
+                popupImg.src = e.target.src;
+                popupImg.classList.remove("fade-in-left", "fade-in-right");
+                popup.style.display = "flex";
+            }
+        });
+
+        document.getElementById("imagePopup").addEventListener("click", function () {
+            this.style.display = "none";
+        });
+
+        document.addEventListener("keydown", function (e) {
+            const popup = document.getElementById("imagePopup");
+            if (popup.style.display === "flex") {
+                if (e.key.toLowerCase() === "a") updateImagePopup((currentIndex - 1 + imageElements.length) % imageElements.length, -1);
+                if (e.key.toLowerCase() === "d") updateImagePopup((currentIndex + 1) % imageElements.length, 1);
+                if (e.key === "Escape") popup.style.display = "none";
+            }
+        });
+
+        window.addEventListener("blur", () => {
+            if (!isFakeMode) {
+                originalContent = document.body.innerHTML;
+                document.body.innerHTML = `<iframe src="elearning/index.html" style="width:100vw;height:100vh;border:none;"></iframe>`;
+                document.title = "LearnEducation - E-Learning";
+                const icon = document.querySelector("link[rel~='icon']");
+                if (icon) icon.href = "elearning/images/icon/favicon.png";
+                isFakeMode = true;
+            }
+        });
+
+        function fakeTitle() {
+            if (isFakeMode) {
+                document.title = "LearnEducation - E-Learning";
+                const icon = document.querySelector("link[rel~='icon']");
+                if (icon) icon.href = "elearning/images/icon/favicon.png";
+            }
+        }
+
+        function realTitle() {
+            if (!isFakeMode) {
+                document.title = "Archive69";
+                const icon = document.querySelector("link[rel~='icon']");
+                if (icon) icon.href = "e-A69.ico";
+            }
+        }
+
+        window.addEventListener("blur", fakeTitle);
+        window.addEventListener("focus", realTitle);
+        function updateClock() {
+            const now = new Date();
+            const hh = now.getHours().toString().padStart(2, '0');
+            const mm = now.getMinutes().toString().padStart(2, '0');
+            const ss = now.getSeconds().toString().padStart(2, '0');
+            document.getElementById('realtimeClock').textContent = `${hh}:${mm}:${ss}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock(); // gọi lần đầu để tránh trễ 1 giây
 
     </script>
 </body>
