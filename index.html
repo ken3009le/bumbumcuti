@@ -331,7 +331,7 @@
                 loginScreen.style.display = 'none';
                 nav.style.display = 'flex';
                 try {
-                    const res = await fetch("media2.json");
+                    const res = await fetch("https://raw.githubusercontent.com/ken3009le/bumbumcuti/refs/heads/main/media2.json");
                     mediaData = await res.json();
                     const folderSelect = document.getElementById("folderSelect");
                     folderSelect.innerHTML = Object.keys(mediaData).map(f => `<option value="${f}">${f}</option>`).join("");
